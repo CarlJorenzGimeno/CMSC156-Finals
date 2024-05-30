@@ -58,7 +58,9 @@ Future<void> createRoom() async {
 
 Future<void> joinRoom(String roomCode) async {
   // Check if document exist
-  bool isRoomExists = await checkIfDocExists(roomCode);
+  bool isRoomExists;
+
+  isRoomExists = await checkIfDocExists(roomCode);
 
   // Check if room code is already used
   if (!isRoomExists) {

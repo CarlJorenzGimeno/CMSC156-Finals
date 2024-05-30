@@ -1,12 +1,33 @@
+import 'package:finals/backend/firestore.dart';
 import 'package:finals/backend/globals.dart';
+import 'package:finals/select_character.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   runApp(const Create());
 }
 
-class Create extends StatelessWidget {
+class Create extends StatefulWidget {
   const Create({super.key});
+
+  @override
+  State<Create> createState() => _CreateState();
+}
+
+class _CreateState extends State<Create> {
+  var roomListener = db.doc(currentRoom).snapshots();
+
+  @override
+  void initState() async {
+    super.initState();
+    roomListener.listen((event) {
+      roomInfo = event.data();
+      if (roomInfo?['other'] != null) {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const Select()));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

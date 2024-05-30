@@ -72,6 +72,7 @@ class Join extends StatelessWidget {
                       ),
                       const SizedBox(height: 15),
                       TextFormField(
+                        controller: _roomCode,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -99,6 +100,8 @@ class Join extends StatelessWidget {
               const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () async {
+                  debugPrint("Rawr");
+                  debugPrint(_roomCode.text);
                   await joinRoom(_roomCode.text);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const Select()));
