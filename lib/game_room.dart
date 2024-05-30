@@ -15,7 +15,7 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   List<int> tileList = randomizeTiles();
   final TextEditingController _message = TextEditingController();
-  final ValueNotifier<int> willGuess = ValueNotifier(guess!);
+  final ValueNotifier<int> willGuess = ValueNotifier(guess ?? 20);
 
   void restartGame() {
     Navigator.of(context).pop();
