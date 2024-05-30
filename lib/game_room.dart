@@ -140,7 +140,7 @@ class _GameState extends State<Game> {
             width: 110,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('Logo_Final_White.png')),
+                  image: AssetImage('assets/Logo_Final_White.png')),
             ),
           ),
           bottom: const TabBar(
@@ -167,7 +167,7 @@ class _GameState extends State<Game> {
                 Container(
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("BGwithQ.png"),
+                      image: AssetImage("assets/withQ.png"),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -208,7 +208,7 @@ class _GameState extends State<Game> {
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
                                 image: chars[guessing] ??
-                                    const AssetImage('Anon.png'),
+                                    const AssetImage('assets/Anon.png'),
                                 fit: BoxFit.cover),
                           ),
                         ),
@@ -224,7 +224,7 @@ class _GameState extends State<Game> {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("BGwithQ.png"),
+                  image: AssetImage("assets/bgwithQ.png"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -400,7 +400,7 @@ class _CharTileState extends State<CharTile> {
               ),
               borderRadius: BorderRadius.circular(5),
               image: const DecorationImage(
-                  image: AssetImage('Anon.png'), fit: BoxFit.cover),
+                  image: AssetImage('assets/Anon.png'), fit: BoxFit.cover),
             ),
           ),
           Visibility(
@@ -414,7 +414,7 @@ class _CharTileState extends State<CharTile> {
                   borderRadius: BorderRadius.circular(5),
                   image: DecorationImage(
                       image: chars[widget.tileList[widget.index]] ??
-                          const AssetImage('Anon.png'),
+                          const AssetImage('assets/Anon.png'),
                       fit: BoxFit.cover),
                 ),
               )),

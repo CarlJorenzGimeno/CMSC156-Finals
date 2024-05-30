@@ -13,7 +13,7 @@ class Mechanics extends StatelessWidget {
       body: DecoratedBox(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("BGwithQ.png"),
+            image: AssetImage("assets/bgwithQ.png"),
             fit: BoxFit.cover,
           ),
         ),

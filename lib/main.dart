@@ -32,7 +32,7 @@ class MainMenu extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("BGwithQ.png"),
+            image: AssetImage("assets/bgwithQ.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -47,7 +47,7 @@ class MainMenu extends StatelessWidget {
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                       image:
-                          AssetImage('Logo_Final_White.png'),
+                          AssetImage('assets/Logo_Final_White.png'),
                       fit: BoxFit.cover),
                 ),
               ),

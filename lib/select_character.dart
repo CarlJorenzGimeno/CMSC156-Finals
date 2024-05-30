@@ -20,7 +20,7 @@ class _SelectState extends State<Select> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("BGwithQ.png"),
+            image: AssetImage("assets/bgwithQ.png"),
             fit: BoxFit.fill,
           ),
         ),
@@ -67,7 +67,7 @@ class _SelectState extends State<Select> {
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
                                 image: chars[index] ??
-                                    const AssetImage('Anon.png'),
+                                    const AssetImage('assets/Anon.png'),
                                 fit: BoxFit.cover),
                           ),
                         ),
