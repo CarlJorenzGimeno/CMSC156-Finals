@@ -4,6 +4,8 @@ import 'package:finals/backend/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../select_character.dart';
+
 FirebaseFirestore db = FirebaseFirestore.instance;
 FirebaseAuth authInstance = FirebaseAuth.instance;
 
@@ -73,7 +75,7 @@ Future<void> joinRoom(String roomCode, BuildContext context) async {
       showDialog(
           context: context,
           builder: (context) {
-            return AlertDialog(
+            return const AlertDialog(
               title: Text("Matching Failed"),
               content: Text("Game is already in session"),
             );
@@ -85,20 +87,23 @@ Future<void> joinRoom(String roomCode, BuildContext context) async {
       'p2_name': name,
     };
     docRef.update(data);
-    // await docRef.set(data, SetOptions(merge: true));
     roomInfo = (await docRef.get()).data() ?? roomInfo;
     debugPrint(roomInfo.toString());
     currentRoom = roomCode;
-    // docRef.snapshots().listen(
-    //   (event) {
-    //     Map<String, dynamic>? data = event.data();
-
-    //     if (data?['other'] != null) {
-    //       // TODO Move to play area
-    //     }
-    //   },
-    //   onError: (error) => showSnackBar("Listen failed: $error"),
-    // );
+    if (context.mounted) {
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => const Select()));
+    }
+  } else {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text("Matching Failed"),
+            content: Text("Room does not exist"),
+          );
+        });
+    return;
   }
 }
 
