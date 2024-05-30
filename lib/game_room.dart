@@ -21,6 +21,27 @@ class _GameState extends State<Game> {
     Navigator.of(context).pop();
   }
 
+  void leaveGame() async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+              content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(
+                height: 20,
+              ),
+              Text("Leaving Match"),
+            ],
+          ));
+        });
+    await exitRoom();
+    Navigator.popUntil(context, (route) => route.isFirst);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +52,9 @@ class _GameState extends State<Game> {
         .snapshots()
         .listen((event) {
       var data = event.data();
+      if (data == null) {
+        leaveGame();
+      }
       bool win = data?[check] == guess;
       showDialog(
           context: context,
@@ -51,6 +75,18 @@ class _GameState extends State<Game> {
                             ? "$name wins. ${roomInfo['p1_win']} - ${roomInfo['p2_win']}"
                             : "Wrong");
                       }),
+                  Row(
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            restartGame();
+                          },
+                          child: const Text('Continue')),
+                      TextButton(
+                          onPressed: leaveGame,
+                          child: const Text('Leave')),
+                    ],
+                  )
                 ],
               ),
             );
@@ -78,28 +114,7 @@ class _GameState extends State<Game> {
                               "Are you sure you want to leave the match?"),
                           actions: [
                             TextButton(
-                              onPressed: () async {
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) {
-                                      return const AlertDialog(
-                                          content: Column(
-                                        mainAxisSize:
-                                            MainAxisSize.min,
-                                        children: [
-                                          CircularProgressIndicator(),
-                                          SizedBox(
-                                            height: 20,
-                                          ),
-                                          Text("Leaving Match"),
-                                        ],
-                                      ));
-                                    });
-                                await exitRoom();
-                                Navigator.popUntil(context,
-                                    (route) => route.isFirst);
-                              },
+                              onPressed: leaveGame,
                               child: const Text("Yes"),
                             ),
                             TextButton(
@@ -324,9 +339,10 @@ class _GameState extends State<Game> {
                         ),
                         child: IconButton(
                           onPressed: () {
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(
-                                    builder: (context) => Select(
+                            Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const Select(
                                           guessing: true,
                                         )));
                           },
