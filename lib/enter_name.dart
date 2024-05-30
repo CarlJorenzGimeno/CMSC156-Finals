@@ -31,7 +31,7 @@ class EnterName extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("images/BGwithQ.png"),
+            image: AssetImage("BGwithQ.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -46,7 +46,7 @@ class EnterName extends StatelessWidget {
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                       image:
-                          AssetImage('images/Logo_Final_White.png'),
+                          AssetImage('Logo_Final_White.png'),
                       fit: BoxFit.cover),
                 ),
               ),

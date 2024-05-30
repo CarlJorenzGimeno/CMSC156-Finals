@@ -319,7 +319,7 @@ class _CharTileState extends State<CharTile> {
               ),
               borderRadius: BorderRadius.circular(5),
               image: const DecorationImage(
-                  image: AssetImage('images/Anon.png'),
+                  image: AssetImage('Anon.png'),
                   fit: BoxFit.cover),
             ),
           ),
@@ -334,7 +334,7 @@ class _CharTileState extends State<CharTile> {
                   borderRadius: BorderRadius.circular(5),
                   image: DecorationImage(
                       image: chars[widget.tileList[widget.index]] ??
-                          const AssetImage('images/Anon.png'),
+                          const AssetImage('Anon.png'),
                       fit: BoxFit.cover),
                 ),
               )),
