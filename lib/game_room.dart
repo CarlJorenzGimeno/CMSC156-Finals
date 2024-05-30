@@ -21,6 +21,7 @@ class _GameState extends State<Game> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           //Back Button
           actions: [
             IconButton(
@@ -300,36 +301,43 @@ class _CharTileState extends State<CharTile> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              width: 2,
-              color: Colors.purple,
-            ),
-            borderRadius: BorderRadius.circular(5),
-            image: const DecorationImage(
-                image: AssetImage('images/Anon.png'),
-                fit: BoxFit.cover),
-          ),
-        ),
-        Visibility(
-            visible: !hide,
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 2,
-                  color: Colors.purple,
-                ),
-                borderRadius: BorderRadius.circular(5),
-                image: DecorationImage(
-                    image: chars[widget.tileList[widget.index]] ??
-                        const AssetImage('images/Anon.png'),
-                    fit: BoxFit.cover),
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          hide = !hide;
+        });
+      },
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                width: 2,
+                color: Colors.purple,
               ),
-            )),
-      ],
+              borderRadius: BorderRadius.circular(5),
+              image: const DecorationImage(
+                  image: AssetImage('images/Anon.png'),
+                  fit: BoxFit.cover),
+            ),
+          ),
+          Visibility(
+              visible: !hide,
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 2,
+                    color: Colors.purple,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                  image: DecorationImage(
+                      image: chars[widget.tileList[widget.index]] ??
+                          const AssetImage('images/Anon.png'),
+                      fit: BoxFit.cover),
+                ),
+              )),
+        ],
+      ),
     );
   }
 }
