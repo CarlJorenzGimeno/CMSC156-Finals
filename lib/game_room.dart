@@ -57,6 +57,8 @@ class _GameState extends State<Game> {
       }
       bool win = data?[check] == guess;
 
+      debugPrint(guessCheck.toString());
+
       if (guessCheck) {
         guessCheck = false;
         showDialog(
@@ -212,7 +214,8 @@ class _GameState extends State<Game> {
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
                                 image: chars[guessing] ??
-                                    const AssetImage('assets/Anon.png'),
+                                    const AssetImage(
+                                        'assets/Anon.png'),
                                 fit: BoxFit.cover),
                           ),
                         ),
@@ -404,7 +407,8 @@ class _CharTileState extends State<CharTile> {
               ),
               borderRadius: BorderRadius.circular(5),
               image: const DecorationImage(
-                  image: AssetImage('assets/Anon.png'), fit: BoxFit.cover),
+                  image: AssetImage('assets/Anon.png'),
+                  fit: BoxFit.cover),
             ),
           ),
           Visibility(
