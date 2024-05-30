@@ -22,12 +22,56 @@ class _GameState extends State<Game> {
       child: Scaffold(
         appBar: AppBar(
           //Back Button
-          leading: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.arrow_back_rounded,
-                size: 25,
-              )),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text("Leave Match"),
+                          content: const Text(
+                              "Are you sure you want to leave the match?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () async {
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) {
+                                      return const AlertDialog(
+                                          content: Column(
+                                        mainAxisSize:
+                                            MainAxisSize.min,
+                                        children: [
+                                          CircularProgressIndicator(),
+                                          SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text("Leaving Match"),
+                                        ],
+                                      ));
+                                    });
+                                await exitRoom();
+                                Navigator.popUntil(context,
+                                    (route) => route.isFirst);
+                              },
+                              child: const Text("Yes"),
+                            ),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("No"))
+                          ],
+                        );
+                      });
+                },
+                icon: const Icon(
+                  Icons.exit_to_app,
+                  size: 25,
+                ))
+          ],
           toolbarHeight: 60,
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF6D318D),
@@ -160,8 +204,8 @@ class _GameState extends State<Game> {
                           return ListView(
                             children: data.entries.map((e) {
                               return ListTile(
-                                title: Text(e.value.toString()),
-                                subtitle: Text(e.key),
+                                title: Text(e.value[1]),
+                                subtitle: Text(e.value[0]),
                               );
                             }).toList(),
                           );

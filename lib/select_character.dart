@@ -1,3 +1,4 @@
+import 'package:finals/backend/firestore.dart';
 import 'package:finals/backend/globals.dart';
 import 'package:finals/game_room.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,7 @@ class Select extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => Game()));
+                      builder: (context) => const Game()));
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: const Size(150, 40),

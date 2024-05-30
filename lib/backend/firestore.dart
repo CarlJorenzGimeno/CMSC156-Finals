@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finals/backend/globals.dart';
 import 'package:finals/backend/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 FirebaseAuth authInstance = FirebaseAuth.instance;
@@ -56,20 +57,37 @@ Future<void> createRoom() async {
   currentRoom = roomCode;
 }
 
-Future<void> joinRoom(String roomCode) async {
+Future<void> joinRoom(String roomCode, BuildContext context) async {
   // Check if document exist
   bool isRoomExists;
 
   isRoomExists = await checkIfDocExists(roomCode);
 
   // Check if room code is already used
-  if (!isRoomExists) {
+  if (isRoomExists) {
     final docRef = db.collection('rooms').doc(roomCode);
+    if (await docRef.get().then((value) {
+      return value.data()?['p2_name'] != null;
+    })) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("Matching Failed"),
+              content: Text("Game is already in session"),
+            );
+          });
+      return;
+    }
     final Map<String, dynamic> data = {
       'other': authInstance.currentUser,
       'p2_name': name,
     };
-    docRef.set(data, SetOptions(merge: true));
+    docRef.update(data);
+    // await docRef.set(data, SetOptions(merge: true));
+    roomInfo = (await docRef.get()).data() ?? roomInfo;
+    debugPrint(roomInfo.toString());
+    currentRoom = roomCode;
     // docRef.snapshots().listen(
     //   (event) {
     //     Map<String, dynamic>? data = event.data();
@@ -91,10 +109,7 @@ Future<void> exitRoom() async {
       "other": null,
       "p2_name": null,
     };
-    await db
-        .collection('rooms')
-        .doc(currentRoom)
-        .set(data, SetOptions(merge: true));
+    await db.collection('rooms').doc(currentRoom).update(data);
   }
   currentRoom = "";
 }
@@ -125,7 +140,7 @@ Future<void> startGame() async {
 void sendMessage(String message) {
   var chat = db.collection('chat').doc(currentRoom);
   Map<String, dynamic> messagePacket = {
-    name: message,
+    DateTime.now().toIso8601String(): [name, message],
   };
   chat.set(messagePacket, SetOptions(merge: true));
 }

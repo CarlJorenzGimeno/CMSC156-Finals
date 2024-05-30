@@ -102,7 +102,7 @@ class Join extends StatelessWidget {
                 onPressed: () async {
                   debugPrint("Rawr");
                   debugPrint(_roomCode.text);
-                  await joinRoom(_roomCode.text);
+                  await joinRoom(_roomCode.text, context);
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => const Select()));
                 },
