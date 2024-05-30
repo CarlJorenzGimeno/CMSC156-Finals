@@ -15,16 +15,18 @@ class Create extends StatefulWidget {
 }
 
 class _CreateState extends State<Create> {
-  var roomListener = db.doc(currentRoom).snapshots();
-
   @override
-  void initState() async {
+  void initState() {
     super.initState();
-    roomListener.listen((event) {
-      roomInfo = event.data();
-      if (roomInfo?['other'] != null) {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => const Select()));
+    db
+        .collection('rooms')
+        .doc(currentRoom)
+        .snapshots()
+        .listen((event) {
+      var data = event.data();
+      if (data?['other'] != null) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => Select()));
       }
     });
   }
@@ -127,6 +129,20 @@ class _CreateState extends State<Create> {
               const Center(
                 child: CircularProgressIndicator(),
               ),
+              // StreamBuilder(
+              //     stream: db
+              //         .collection('rooms')
+              //         .doc(currentRoom)
+              //         .snapshots(),
+              //     builder: (context, snapshot) {
+              //       if (!snapshot.hasData) {
+              //         return const Center(
+              //           child: CircularProgressIndicator(),
+              //         );
+              //       } else {
+              //         Navigator.of(context).pop();
+              //       }
+              //     }),
               const SizedBox(height: 40),
               const Text(
                 'Waiting for Other Players...',

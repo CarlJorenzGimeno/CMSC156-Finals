@@ -8,7 +8,22 @@ String currentRoom = "";
 Set<int>? board;
 int? guessing;
 bool isHost = false;
-Map<String, dynamic>? roomInfo;
+bool start = false;
+
+Map<String, dynamic> roomInfo = {
+  "id": null, // Room Code
+  "host": null, // Host User
+  "other": null, // Other User
+  "p1_name": name, // Host Name
+  "p2_name": null, // Other Name
+  "p1_guessed": null,
+  "p2_guessed": null,
+  "p1_chosen": null, // P1 chosen
+  "p2_chosen": null, // P2 chosen
+  "p1_win": 0,
+  "p2_win": 0,
+};
+
 Map<int, ImageProvider> chars = {
   0: const AssetImage('images/Edward.png'),
   1: const AssetImage('images/Grace.png'),
