@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "777616408707",
+    "project_id": "guess-who-9802b",
+    "storage_bucket": "guess-who-9802b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777616408707:android:1fb9fcb735fd0145a51bb6",
+        "android_client_info": {
+          "package_name": "com.APoy.guess_who"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1QvgEulrrvnQkDfHFLV7X4me8ClMEuZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777616408707:android:a1c33d947e6ae863a51bb6",
+        "android_client_info": {
+          "package_name": "com.example.finals"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1QvgEulrrvnQkDfHFLV7X4me8ClMEuZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
