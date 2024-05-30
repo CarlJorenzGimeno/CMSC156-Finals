@@ -1,6 +1,7 @@
 import 'package:finals/backend/firestore.dart';
 import 'package:finals/select_character.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(Join());
@@ -73,6 +74,7 @@ class Join extends StatelessWidget {
                       const SizedBox(height: 15),
                       TextFormField(
                         controller: _roomCode,
+                        textAlign: TextAlign.center,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -81,7 +83,7 @@ class Join extends StatelessWidget {
                               width: 5,
                             ),
                           ),
-                          hintText: 'Enter username',
+                          hintText: 'Enter room code',
                           labelStyle: const TextStyle(
                             fontFamily: 'Times New Roman',
                             color: Color(0xFF6D318D),

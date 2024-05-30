@@ -73,6 +73,7 @@ class EnterName extends StatelessWidget {
                 ),
                 child: TextFormField(
                   controller: _nameController,
+                  textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
