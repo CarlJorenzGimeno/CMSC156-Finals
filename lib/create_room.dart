@@ -24,6 +24,7 @@ class _CreateState extends State<Create> {
         .snapshots()
         .listen((event) {
       var data = event.data();
+      debugPrint(data.toString());
       if (data?['other'] != null) {
         Navigator.of(context)
             .push(MaterialPageRoute(builder: (context) => Select()));
