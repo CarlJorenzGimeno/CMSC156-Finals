@@ -9,7 +9,7 @@ Set<int>? board;
 int? guessing;
 bool isHost = false;
 bool start = false;
-int? guess;
+List<int?> guess = [null, null];
 bool guessCheck = false;
 
 Map<String, dynamic> roomInfo = {

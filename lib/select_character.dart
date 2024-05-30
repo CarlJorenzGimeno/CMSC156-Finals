@@ -67,7 +67,8 @@ class _SelectState extends State<Select> {
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
                                 image: chars[index] ??
-                                    const AssetImage("assets/images/Anon.png"),
+                                    const AssetImage(
+                                        "assets/images/Anon.png"),
                                 fit: BoxFit.cover),
                           ),
                         ),
@@ -79,8 +80,17 @@ class _SelectState extends State<Select> {
               ElevatedButton(
                 onPressed: () {
                   if (widget.guessing) {
-                    guess = guessing;
-                    guessCheck = true;
+                    String player = 'p2_guessed';
+                    if (isHost) {
+                      player = 'p1_guessed';
+                    }
+                    // guess = guessing ?? 20;
+                    // guessCheck = true;
+                    db
+                        .collection('rooms')
+                        .doc(currentRoom)
+                        .update({player: guessing});
+
                     Navigator.of(context).pop();
                   } else {
                     //Set which field to change

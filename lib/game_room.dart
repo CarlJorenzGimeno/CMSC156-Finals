@@ -15,7 +15,6 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   List<int> tileList = randomizeTiles();
   final TextEditingController _message = TextEditingController();
-  final ValueNotifier<int> willGuess = ValueNotifier(guess ?? 20);
 
   void restartGame() {
     Navigator.of(context).pop();
@@ -46,6 +45,7 @@ class _GameState extends State<Game> {
   void initState() {
     super.initState();
     String check = (isHost) ? 'p1_chosen' : 'p2_chosen';
+    String condition = (isHost) ? 'p2_guessed' : 'p1_guessed';
     db
         .collection('rooms')
         .doc(currentRoom)
@@ -55,12 +55,14 @@ class _GameState extends State<Game> {
       if (data == null) {
         leaveGame();
       }
-      bool win = data?[check] == guess;
+
+      bool win = data?[check] == data?[condition];
 
       debugPrint(guessCheck.toString());
 
       if (guessCheck) {
         guessCheck = false;
+
         showDialog(
             context: context,
             builder: (context) {
@@ -70,11 +72,11 @@ class _GameState extends State<Game> {
                   children: [
                     Text("$name guessed"),
                     Image(
-                      image: chars[guess] ??
+                      image: chars[guessing] ??
                           const AssetImage('Anon.png'),
                     ),
                     FutureBuilder(
-                        future: addWin(),
+                        future: Future.wait([updateRoom(), addWin()]),
                         builder: (context, snapshot) {
                           return Text(win
                               ? "$name wins. ${roomInfo['p1_win']} - ${roomInfo['p2_win']}"
@@ -146,7 +148,8 @@ class _GameState extends State<Game> {
             width: 110,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/Logo_Final_White.png')),
+                  image: AssetImage(
+                      'assets/images/Logo_Final_White.png')),
             ),
           ),
           bottom: const TabBar(
@@ -168,208 +171,245 @@ class _GameState extends State<Game> {
         body: TabBarView(
           children: [
             //Character Deck Tab
-            ListView(
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/withQ.png"),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 500,
-                          width: 400,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GridView.builder(
-                              primary: false,
-                              itemCount: chars.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 4,
-                                      crossAxisSpacing: 5,
-                                      mainAxisSpacing: 5),
-                              itemBuilder:
-                                  (BuildContext context, int index) {
-                                return CharTile(
-                                    tileList: tileList, index: index);
-                              },
-                            ),
-                          ),
-                        ),
-
-                        //Character to be Guessed
-                        Container(
-                          height: 100,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.green,
-                            ),
-                            borderRadius: BorderRadius.circular(5),
-                            image: DecorationImage(
-                                image: chars[guessing] ??
-                                    const AssetImage(
-                                        "assets/images/Anon.png"),
-                                fit: BoxFit.cover),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            CharacterDeck(tileList: tileList),
 
             //Game Chat Tab
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/bgwithQ.png"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Container(
-                    height: 450,
-                    width: 380,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                          color: const Color(0xFFE4CD9D),
-                          width: 5,
-                        )),
-                    child: StreamBuilder<DocumentSnapshot>(
-                        stream: db
-                            .collection('chat')
-                            .doc(currentRoom)
-                            .snapshots(),
-                        builder: (BuildContext context,
-                            AsyncSnapshot<DocumentSnapshot>
-                                snapshot) {
-                          if (snapshot.hasError) {
-                            return const Text('Something went wrong');
-                          }
-
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                                child: CircularProgressIndicator());
-                          }
-
-                          var data = snapshot.data?.data()
-                              as Map<String, dynamic>;
-                          return ListView(
-                            children: data.entries.map((e) {
-                              return ListTile(
-                                title: Text(
-                                    e.value[0] + ': ' + e.value[1]),
-                              );
-                            }).toList(),
-                          );
-                        }),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.sizeOf(context).width * 0.8,
-                        decoration: const BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 40,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: TextFormField(
-                          controller: _message,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF6D318D),
-                                style: BorderStyle.solid,
-                                width: 10,
-                              ),
-                            ),
-                            hintText: 'Type a message',
-                            labelStyle: const TextStyle(
-                              fontFamily: 'Times New Roman',
-                              color: Color(0xFF6D318D),
-                              fontSize: 25,
-                              letterSpacing: 0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFF6D318D),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            sendMessage(_message.text);
-                            _message.clear();
-                          },
-                          icon: const Icon(
-                            Icons.send_rounded,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      Container(
-                        height: 50,
-                        width: 50,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xFF6D318D),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const Select(
-                                          guessing: true,
-                                        )));
-                          },
-                          icon: const Icon(
-                            Icons.send_rounded,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            )
+            GameChat(message: _message)
           ],
         ),
       ),
     );
   }
+}
+
+class GameChat extends StatefulWidget {
+  const GameChat({
+    super.key,
+    required TextEditingController message,
+  }) : _message = message;
+
+  final TextEditingController _message;
+
+  @override
+  State<GameChat> createState() => _GameChatState();
+}
+
+class _GameChatState extends State<GameChat> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage("assets/images/bgwithQ.png"),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          Container(
+            height: 450,
+            width: 380,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: const Color(0xFFE4CD9D),
+                  width: 5,
+                )),
+            child: StreamBuilder<DocumentSnapshot>(
+                stream: db
+                    .collection('chat')
+                    .doc(currentRoom)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Something went wrong');
+                  }
+
+                  if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(
+                        child: CircularProgressIndicator());
+                  }
+
+                  var data =
+                      snapshot.data?.data() as Map<String, dynamic>;
+                  return ListView(
+                    children: data.entries.map((e) {
+                      return ListTile(
+                        title: Text(e.value[0] + ': ' + e.value[1]),
+                      );
+                    }).toList(),
+                  );
+                }),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: MediaQuery.sizeOf(context).width * 0.7,
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 40,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: TextFormField(
+                  controller: widget._message,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(
+                        color: Color(0xFF6D318D),
+                        style: BorderStyle.solid,
+                        width: 10,
+                      ),
+                    ),
+                    hintText: 'Type a message',
+                    labelStyle: const TextStyle(
+                      fontFamily: 'Times New Roman',
+                      color: Color(0xFF6D318D),
+                      fontSize: 25,
+                      letterSpacing: 0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 5),
+              Container(
+                height: 50,
+                width: 50,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF6D318D),
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    sendMessage(widget._message.text);
+                    widget._message.clear();
+                  },
+                  icon: const Icon(
+                    Icons.send_rounded,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 5),
+              Container(
+                height: 50,
+                width: 70,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF6D318D),
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const Select(
+                              guessing: true,
+                            )));
+                  },
+                  child: const Text(
+                    'Guess',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CharacterDeck extends StatefulWidget {
+  const CharacterDeck({
+    super.key,
+    required this.tileList,
+  });
+
+  final List<int> tileList;
+
+  @override
+  State<CharacterDeck> createState() => _CharacterStateDeck();
+}
+
+class _CharacterStateDeck extends State<CharacterDeck>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return ListView(
+      children: [
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("bgwithQ.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 500,
+                  width: 400,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GridView.builder(
+                      primary: false,
+                      itemCount: chars.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 5),
+                      itemBuilder: (BuildContext context, int index) {
+                        return CharTile(
+                            tileList: widget.tileList, index: index);
+                      },
+                    ),
+                  ),
+                ),
+
+                //Character to be Guessed
+                Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 2,
+                      color: Colors.green,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                    image: DecorationImage(
+                        image: chars[guessing] ??
+                            const AssetImage(
+                                'assets/images/Anon.png'),
+                        fit: BoxFit.cover),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class CharTile extends StatefulWidget {

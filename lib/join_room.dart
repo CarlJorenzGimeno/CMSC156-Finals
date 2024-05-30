@@ -1,9 +1,7 @@
 import 'package:finals/backend/firestore.dart';
 import 'package:finals/backend/utils.dart';
-import 'package:finals/select_character.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 
 void main() {
   runApp(Join());
@@ -34,7 +32,8 @@ class Join extends StatelessWidget {
                 width: 300,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage('assets/Logo_Final_White.png'),
+                      image:
+                          AssetImage('assets/Logo_Final_White.png'),
                       fit: BoxFit.cover),
                 ),
               ),
