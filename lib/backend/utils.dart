@@ -15,6 +15,12 @@ String getRandomString() {
           characters.codeUnitAt(random.nextInt(characters.length))));
 }
 
+List<int> randomizeTiles() {
+  List<int> tileList = List.generate(20, (index) => index);
+  tileList.shuffle();
+  return tileList;
+}
+
 void showSnackBar(String text) {
   rootScaffoldMessengerKey.currentState
       ?.showSnackBar(SnackBar(content: Text(text)));

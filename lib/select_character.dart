@@ -1,4 +1,5 @@
 import 'package:finals/backend/globals.dart';
+import 'package:finals/game_room.dart';
 import 'package:flutter/material.dart';
 
 class Select extends StatelessWidget {
@@ -39,17 +40,23 @@ class Select extends StatelessWidget {
                             crossAxisSpacing: 5,
                             mainAxisSpacing: 5),
                     itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 2,
-                            color: Colors.purple,
+                      return TextButton(
+                        onPressed: () {
+                          guessing = index;
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 2,
+                              color: Colors.purple,
+                            ),
+                            borderRadius: BorderRadius.circular(5),
+                            image: DecorationImage(
+                                image: chars[index] ??
+                                    const AssetImage(
+                                        'images/Anon.png'),
+                                fit: BoxFit.cover),
                           ),
-                          borderRadius: BorderRadius.circular(5),
-                          image: DecorationImage(
-                              image: chars[index] ??
-                                  const AssetImage('images/Anon.png'),
-                              fit: BoxFit.cover),
                         ),
                       );
                     },
@@ -57,7 +64,10 @@ class Select extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => Game()));
+                },
                 style: ElevatedButton.styleFrom(
                     minimumSize: const Size(150, 40),
                     foregroundColor: const Color(0xFF6D318D),

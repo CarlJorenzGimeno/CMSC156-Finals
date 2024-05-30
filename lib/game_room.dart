@@ -1,35 +1,11 @@
+import 'package:finals/backend/globals.dart';
+import 'package:finals/backend/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-void main() {
-  runApp(const Game());
-}
 
 class Game extends StatelessWidget {
-  const Game({super.key});
+  Game({super.key});
 
-  static const List<String> imagesList = [
-    'images/Edward.png',
-    'images/Grace.png',
-    'images/Phillip.png',
-    'images/Julie.png',
-    'images/Anton.png',
-    'images/Joy.png',
-    'images/Kevin.png',
-    'images/Karla.png',
-    'images/Michael.png',
-    'images/Tina.png',
-    'images/Sean.png',
-    'images/Ashley.png',
-    'images/Neil.png',
-    'images/Ariel.png',
-    'images/Victor.png',
-    'images/Precious.png',
-    'images/Justin.png',
-    'images/Jade.png',
-    'images/Carl.png',
-    'images/Joseph.png',
-  ];
+  final List<int> tileList = randomizeTiles();
 
   @override
   Widget build(BuildContext context) {
@@ -95,25 +71,17 @@ class Game extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: GridView.builder(
                                 primary: false,
-                                itemCount: imagesList.length,
+                                itemCount: chars.length,
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: 4,
                                         crossAxisSpacing: 5,
                                         mainAxisSpacing: 5),
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        width: 2,
-                                        color: Colors.purple,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5),
-                                      image: DecorationImage(
-                                          image: AssetImage(imagesList[index]),
-                                          fit: BoxFit.cover),
-                                    ),
-                                  );
+                                itemBuilder: (BuildContext context,
+                                    int index) {
+                                  return CharTile(
+                                      tileList: tileList,
+                                      index: index);
                                 },
                               ),
                             ),
@@ -130,7 +98,9 @@ class Game extends StatelessWidget {
                               ),
                               borderRadius: BorderRadius.circular(5),
                               image: DecorationImage(
-                                  image: AssetImage(imagesList[0]),
+                                  image: chars[guessing] ??
+                                      const AssetImage(
+                                          'images/Anon.png'),
                                   fit: BoxFit.cover),
                             ),
                           ),
@@ -168,7 +138,8 @@ class Game extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: MediaQuery.sizeOf(context).width * 0.8,
+                          width:
+                              MediaQuery.sizeOf(context).width * 0.8,
                           decoration: const BoxDecoration(
                             boxShadow: [
                               BoxShadow(
@@ -181,7 +152,8 @@ class Game extends StatelessWidget {
                           child: TextFormField(
                             decoration: InputDecoration(
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius:
+                                    BorderRadius.circular(20),
                                 borderSide: const BorderSide(
                                   color: Color(0xFF6D318D),
                                   style: BorderStyle.solid,
@@ -227,6 +199,59 @@ class Game extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CharTile extends StatefulWidget {
+  const CharTile({
+    super.key,
+    required this.tileList,
+    required this.index,
+  });
+
+  final List<int> tileList;
+  final int index;
+
+  @override
+  State<CharTile> createState() => _CharTileState();
+}
+
+class _CharTileState extends State<CharTile> {
+  bool hide = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 2,
+              color: Colors.purple,
+            ),
+            borderRadius: BorderRadius.circular(5),
+            image: const DecorationImage(
+                image: AssetImage('images/Anon.png'),
+                fit: BoxFit.cover),
+          ),
+        ),
+        Visibility(
+            visible: !hide,
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  width: 2,
+                  color: Colors.purple,
+                ),
+                borderRadius: BorderRadius.circular(5),
+                image: DecorationImage(
+                    image: chars[widget.tileList[widget.index]] ??
+                        const AssetImage('images/Anon.png'),
+                    fit: BoxFit.cover),
+              ),
+            )),
+      ],
     );
   }
 }
