@@ -80,6 +80,7 @@ class _SelectState extends State<Select> {
                 onPressed: () {
                   if (widget.guessing) {
                     guess = guessing;
+                    guessCheck = true;
                     Navigator.of(context).pop();
                   } else {
                     //Set which field to change

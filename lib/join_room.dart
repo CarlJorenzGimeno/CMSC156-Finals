@@ -1,6 +1,8 @@
 import 'package:finals/backend/firestore.dart';
+import 'package:finals/backend/utils.dart';
 import 'package:finals/select_character.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 void main() {
@@ -74,8 +76,12 @@ class Join extends StatelessWidget {
                       TextFormField(
                         controller: _roomCode,
                         textAlign: TextAlign.center,
-                        textCapitalization:
-                            TextCapitalization.characters,
+                        maxLength: 6,
+                        maxLengthEnforcement:
+                            MaxLengthEnforcement.enforced,
+                        inputFormatters: [
+                          UpperCaseTextFormatter(),
+                        ],
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
@@ -106,8 +112,6 @@ class Join extends StatelessWidget {
                   debugPrint("Rawr");
                   debugPrint(_roomCode.text);
                   await joinRoom(_roomCode.text, context);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Select()));
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: const Size(120, 40),

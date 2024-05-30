@@ -15,7 +15,7 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   List<int> tileList = randomizeTiles();
   final TextEditingController _message = TextEditingController();
-  final ValueNotifier<int> willGuess = ValueNotifier(guess!);
+  final ValueNotifier<int> willGuess = ValueNotifier(guess ?? 20);
 
   void restartGame() {
     Navigator.of(context).pop();
@@ -56,41 +56,45 @@ class _GameState extends State<Game> {
         leaveGame();
       }
       bool win = data?[check] == guess;
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text("$name guessed"),
-                  Image(
-                    image:
-                        chars[guess] ?? const AssetImage('Anon.png'),
-                  ),
-                  FutureBuilder(
-                      future: addWin(),
-                      builder: (context, snapshot) {
-                        return Text(win
-                            ? "$name wins. ${roomInfo['p1_win']} - ${roomInfo['p2_win']}"
-                            : "Wrong");
-                      }),
-                  Row(
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            restartGame();
-                          },
-                          child: const Text('Continue')),
-                      TextButton(
-                          onPressed: leaveGame,
-                          child: const Text('Leave')),
-                    ],
-                  )
-                ],
-              ),
-            );
-          });
+
+      if (guessCheck) {
+        guessCheck = false;
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("$name guessed"),
+                    Image(
+                      image: chars[guess] ??
+                          const AssetImage('Anon.png'),
+                    ),
+                    FutureBuilder(
+                        future: addWin(),
+                        builder: (context, snapshot) {
+                          return Text(win
+                              ? "$name wins. ${roomInfo['p1_win']} - ${roomInfo['p2_win']}"
+                              : "Wrong");
+                        }),
+                    Row(
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              restartGame();
+                            },
+                            child: const Text('Continue')),
+                        TextButton(
+                            onPressed: leaveGame,
+                            child: const Text('Leave')),
+                      ],
+                    )
+                  ],
+                ),
+              );
+            });
+      }
     });
   }
 
