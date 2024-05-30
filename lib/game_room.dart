@@ -212,7 +212,7 @@ class _GameState extends State<Game> {
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
                                 image: chars[guessing] ??
-                                    const AssetImage('assets/Anon.png'),
+                                    const AssetImage("assets/images/Anon.png"),
                                 fit: BoxFit.cover),
                           ),
                         ),
@@ -404,7 +404,7 @@ class _CharTileState extends State<CharTile> {
               ),
               borderRadius: BorderRadius.circular(5),
               image: const DecorationImage(
-                  image: AssetImage('assets/Anon.png'), fit: BoxFit.cover),
+                  image: AssetImage("assets/images/Anon.png"), fit: BoxFit.cover),
             ),
           ),
           Visibility(
@@ -418,7 +418,7 @@ class _CharTileState extends State<CharTile> {
                   borderRadius: BorderRadius.circular(5),
                   image: DecorationImage(
                       image: chars[widget.tileList[widget.index]] ??
-                          const AssetImage('assets/Anon.png'),
+                          AssetImage("assets/images/Anon.png"),
                       fit: BoxFit.cover),
                 ),
               )),

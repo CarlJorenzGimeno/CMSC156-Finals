@@ -67,7 +67,7 @@ class _SelectState extends State<Select> {
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
                                 image: chars[index] ??
-                                    const AssetImage('assets/Anon.png'),
+                                    const AssetImage("assets/images/Anon.png"),
                                 fit: BoxFit.cover),
                           ),
                         ),
