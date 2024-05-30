@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finals/backend/firestore.dart';
 import 'package:finals/backend/globals.dart';
 import 'package:finals/backend/utils.dart';
+import 'package:finals/select_character.dart';
 import 'package:flutter/material.dart';
 
 class Game extends StatefulWidget {
@@ -12,8 +13,50 @@ class Game extends StatefulWidget {
 }
 
 class _GameState extends State<Game> {
-  final List<int> tileList = randomizeTiles();
+  List<int> tileList = randomizeTiles();
   final TextEditingController _message = TextEditingController();
+  final ValueNotifier<int> willGuess = ValueNotifier(guess!);
+
+  void restartGame() {
+    Navigator.of(context).pop();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    String check = (isHost) ? 'p1_chosen' : 'p2_chosen';
+    db
+        .collection('rooms')
+        .doc(currentRoom)
+        .snapshots()
+        .listen((event) {
+      var data = event.data();
+      bool win = data?[check] == guess;
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text("$name guessed"),
+                  Image(
+                    image:
+                        chars[guess] ?? const AssetImage('Anon.png'),
+                  ),
+                  FutureBuilder(
+                      future: addWin(),
+                      builder: (context, snapshot) {
+                        return Text(win
+                            ? "$name wins. ${roomInfo['p1_win']} - ${roomInfo['p2_win']}"
+                            : "Wrong");
+                      }),
+                ],
+              ),
+            );
+          });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +249,7 @@ class _GameState extends State<Game> {
                             children: data.entries.map((e) {
                               return ListTile(
                                 title: Text(
-                                    e.value[1] + ': ' + e.value[0]),
+                                    e.value[0] + ': ' + e.value[1]),
                               );
                             }).toList(),
                           );
@@ -263,6 +306,29 @@ class _GameState extends State<Game> {
                           onPressed: () {
                             sendMessage(_message.text);
                             _message.clear();
+                          },
+                          icon: const Icon(
+                            Icons.send_rounded,
+                            size: 25,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 5),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Color(0xFF6D318D),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(
+                                    builder: (context) => Select(
+                                          guessing: true,
+                                        )));
                           },
                           icon: const Icon(
                             Icons.send_rounded,

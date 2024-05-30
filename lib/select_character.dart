@@ -82,6 +82,16 @@ class _SelectState extends State<Select> {
                     guess = guessing;
                     Navigator.of(context).pop();
                   } else {
+                    //Set which field to change
+                    String player = 'p2_chosen';
+                    if (isHost) {
+                      player = 'p1_chosen';
+                    }
+                    // Save chosen
+                    db
+                        .collection('rooms')
+                        .doc(currentRoom)
+                        .update({player: guessing});
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const Game()));
                   }

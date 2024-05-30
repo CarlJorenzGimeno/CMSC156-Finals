@@ -55,6 +55,7 @@ Future<void> createRoom() async {
   });
 
   currentRoom = roomCode;
+  isHost = true;
 }
 
 Future<void> joinRoom(String roomCode, BuildContext context) async {
@@ -112,6 +113,27 @@ Future<void> exitRoom() async {
     await db.collection('rooms').doc(currentRoom).update(data);
   }
   currentRoom = "";
+}
+
+Future<void> addWin() async {
+  String player = 'p2_win';
+  int win = roomInfo['p2_win'];
+
+  if (isHost) {
+    player = 'p1_win';
+    win = roomInfo['p1_win'];
+  }
+
+  win++;
+
+  db.collection('rooms').doc(currentRoom).update({player: win});
+  await updateRoom();
+}
+
+Future<void> updateRoom() async {
+  roomInfo =
+      (await db.collection('rooms').doc(currentRoom).get()).data() ??
+          roomInfo;
 }
 
 Future<void> startGame() async {

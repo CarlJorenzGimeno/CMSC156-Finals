@@ -10,6 +10,7 @@ int? guessing;
 bool isHost = false;
 bool start = false;
 int? guess;
+bool guessCheck = false;
 
 Map<String, dynamic> roomInfo = {
   "id": null, // Room Code
