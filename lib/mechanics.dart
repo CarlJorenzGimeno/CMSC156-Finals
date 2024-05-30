@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const Mechanics());
+  runApp(const MaterialApp(home: Mechanics()));
 }
 
 class Mechanics extends StatelessWidget {
@@ -47,36 +47,39 @@ class Mechanics extends StatelessWidget {
                     ),
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      stepStyle(
-                          'Game Mode: Vibes-Vibes Baby'),
-                      stepStyle(
-                          'Objective: Players will take turn giving and guessing vibe-based clues about their character.'),
-                      stepStyle(
-                          '1. Player will enter their username.'),
-                      stepStyle(
-                          '2. Player will choose to create or join a room.'),
-                      stepStyle(
-                          '3. If creating a room, the player will receive a room code to share.'),
-                      stepStyle(
-                          '4. If joining a room, the player will enter the received room code.'),
-                      stepStyle(
-                          '5. Both players will choose a random character from a set of characters.'),
-                      stepStyle(
-                          "6. Players will take turns asking vibe-based, yes/no questions to deduce the opponent's character."),
-                      stepStyle('A vibe-based question should describe a feeling or emotion i.e. Does your character gives off a relaxed vibe?'),
-                      stepStyle(
-                          '7. Players will use answers to eliminate characters on their board.'),
-                      stepStyle(
-                          "8. At any time during their turn, players can guess the opponent's character."),
-                      stepStyle(
-                          "9. The game continues until one player correctly guesses the opponent's character."),
-                      stepStyle(
-                          '10. The player who guesses correctly wins the game.'),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        stepStyle('1. Player will enter their username.'),
+                        stepStyle('2. Player will choose to create or join a room.'),
+                        stepStyle('3. If creating a room, the player will receive a room code to share.'),
+                        stepStyle('4. If joining a room, the player will enter the received room code.'),
+                        stepStyle('5. Both players will choose a random character from a set of characters.'),
+                        stepStyle("6. Players will take turns asking yes/no questions, based on chosen custom game mode, to deduce the opponent's character."),
+                        stepStyle('7. Players will use answers to eliminate characters on their board.'),
+                        stepStyle("8. At any time during their turn, players can guess the opponent's character."),
+                        stepStyle("9. The game continues until one player correctly guesses the opponent's character."),
+                        stepStyle('10. The player who guesses correctly wins the game.'),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Custom Game Modes',
+                          style: TextStyle(
+                            fontFamily: 'Times New Roman',
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 10),
+                        customGameModeStyle('Vibes-Vibes Baby',
+                            'Players will take turns giving and guessing vibe-based clues about their character.'),
+                        customGameModeStyle("Hue's Who?",
+                            "Players will ask questions related to colors associated with the characters, such as their clothing, accessories, or background elements."),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -117,6 +120,42 @@ class Mechanics extends StatelessWidget {
           fontFamily: 'Times New Roman',
           color: Colors.white,
           fontSize: 15,
+        ),
+      ),
+    );
+  }
+
+  Widget customGameModeStyle(String title, String description) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: const Color(0xFF9162A6),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontFamily: 'Times New Roman',
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 5),
+            Text(
+              description,
+              style: const TextStyle(
+                fontFamily: 'Times New Roman',
+                color: Colors.white,
+                fontSize: 15,
+              ),
+            ),
+          ],
         ),
       ),
     );
