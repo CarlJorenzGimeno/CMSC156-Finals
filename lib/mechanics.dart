@@ -52,6 +52,10 @@ class Mechanics extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       stepStyle(
+                          'Game Mode: Vibes-Vibes Baby'),
+                      stepStyle(
+                          'Objective: Players will take turn giving and guessing vibe-based clues about their character.'),
+                      stepStyle(
                           '1. Player will enter their username.'),
                       stepStyle(
                           '2. Player will choose to create or join a room.'),
@@ -60,9 +64,10 @@ class Mechanics extends StatelessWidget {
                       stepStyle(
                           '4. If joining a room, the player will enter the received room code.'),
                       stepStyle(
-                          '5. Both players will choose a random character from a set.'),
+                          '5. Both players will choose a random character from a set of characters.'),
                       stepStyle(
-                          "6. Players will take turns asking yes/no questions to deduce the opponent's character."),
+                          "6. Players will take turns asking vibe-based, yes/no questions to deduce the opponent's character."),
+                      stepStyle('A vibe-based question should describe a feeling or emotion i.e. Does your character gives off a relaxed vibe?'),
                       stepStyle(
                           '7. Players will use answers to eliminate characters on their board.'),
                       stepStyle(
