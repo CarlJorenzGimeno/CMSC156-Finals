@@ -18,7 +18,7 @@ class Join extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("images/BGwithQ.png"),
+            image: AssetImage("BGwithQ.png"),
             fit: BoxFit.cover,
           ),
         ),
@@ -32,8 +32,7 @@ class Join extends StatelessWidget {
                 width: 300,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                      image:
-                          AssetImage('images/Logo_Final_White.png'),
+                      image: AssetImage('Logo_Final_White.png'),
                       fit: BoxFit.cover),
                 ),
               ),
