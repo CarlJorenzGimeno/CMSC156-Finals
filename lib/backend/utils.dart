@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 Random random = Random();
 
 String getRandomString() {
-  const characters =
-      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   Random random = Random();
   return String.fromCharCodes(Iterable.generate(
       6,

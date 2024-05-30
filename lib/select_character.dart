@@ -3,8 +3,16 @@ import 'package:finals/backend/globals.dart';
 import 'package:finals/game_room.dart';
 import 'package:flutter/material.dart';
 
-class Select extends StatelessWidget {
-  const Select({super.key});
+class Select extends StatefulWidget {
+  final bool guessing;
+  const Select({super.key, this.guessing = false});
+
+  @override
+  State<Select> createState() => _SelectState();
+}
+
+class _SelectState extends State<Select> {
+  int? glow;
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +49,20 @@ class Select extends StatelessWidget {
                             crossAxisSpacing: 5,
                             mainAxisSpacing: 5),
                     itemBuilder: (BuildContext context, int index) {
-                      return TextButton(
-                        onPressed: () {
+                      return GestureDetector(
+                        onTap: () {
                           guessing = index;
+                          setState(() {
+                            glow = guessing;
+                          });
                         },
                         child: Container(
                           decoration: BoxDecoration(
                             border: Border.all(
                               width: 2,
-                              color: Colors.purple,
+                              color: (glow == index)
+                                  ? Colors.purple
+                                  : Colors.yellow,
                             ),
                             borderRadius: BorderRadius.circular(5),
                             image: DecorationImage(
@@ -66,8 +79,13 @@ class Select extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Game()));
+                  if (widget.guessing) {
+                    guess = guessing;
+                    Navigator.of(context).pop();
+                  } else {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const Game()));
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                     minimumSize: const Size(150, 40),
@@ -77,9 +95,9 @@ class Select extends StatelessWidget {
                       borderRadius: BorderRadius.circular(40),
                     ),
                     elevation: 3),
-                child: const Text(
-                  'Select',
-                  style: TextStyle(
+                child: Text(
+                  (widget.guessing) ? 'Guess' : 'Select',
+                  style: const TextStyle(
                       fontSize: 20,
                       fontFamily: 'Times New Roman',
                       fontWeight: FontWeight.bold),

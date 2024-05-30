@@ -9,6 +9,7 @@ Set<int>? board;
 int? guessing;
 bool isHost = false;
 bool start = false;
+int? guess;
 
 Map<String, dynamic> roomInfo = {
   "id": null, // Room Code

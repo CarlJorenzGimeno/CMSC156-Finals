@@ -197,7 +197,8 @@ class _GameState extends State<Game> {
 
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Text("Loading");
+                            return const Center(
+                                child: CircularProgressIndicator());
                           }
 
                           var data = snapshot.data?.data()
@@ -205,8 +206,8 @@ class _GameState extends State<Game> {
                           return ListView(
                             children: data.entries.map((e) {
                               return ListTile(
-                                title: Text(e.value[1]),
-                                subtitle: Text(e.value[0]),
+                                title: Text(
+                                    e.value[1] + ': ' + e.value[0]),
                               );
                             }).toList(),
                           );
@@ -262,6 +263,7 @@ class _GameState extends State<Game> {
                         child: IconButton(
                           onPressed: () {
                             sendMessage(_message.text);
+                            _message.clear();
                           },
                           icon: const Icon(
                             Icons.send_rounded,

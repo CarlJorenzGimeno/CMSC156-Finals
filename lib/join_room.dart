@@ -75,6 +75,8 @@ class Join extends StatelessWidget {
                       TextFormField(
                         controller: _roomCode,
                         textAlign: TextAlign.center,
+                        textCapitalization:
+                            TextCapitalization.characters,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
