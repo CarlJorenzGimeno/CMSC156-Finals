@@ -200,7 +200,7 @@ Future<void> startGame() async {
 void sendMessage(String message) {
   var chat = db.collection('chat').doc(currentRoom);
   Map<String, dynamic> messagePacket = {
-    DateTime.now().toIso8601String(): [name, message],
+    DateTime.now().millisecondsSinceEpoch.toString(): [name, message],
   };
   chat.set(messagePacket, SetOptions(merge: true));
 }
