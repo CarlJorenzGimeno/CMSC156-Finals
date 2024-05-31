@@ -240,12 +240,12 @@ class _GameState extends State<Game> {
           foregroundColor: Colors.white,
           backgroundColor: const Color(0xFF6D318D),
           title: Container(
-            margin: const EdgeInsets.only(left: 80),
+            margin: const EdgeInsets.only(left: 100),
             height: 110,
             width: 110,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('Logo_Final_White.png')),
+                  image: AssetImage('assets/Logo_Final_White.png')),
             ),
           ),
           bottom: const TabBar(
@@ -296,7 +296,7 @@ class _GameChatState extends State<GameChat> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("bgwithQ.png"),
+          image: AssetImage("assets/bgwithQ.png"),
           fit: BoxFit.cover,
         ),
       ),
@@ -305,7 +305,7 @@ class _GameChatState extends State<GameChat> {
           const SizedBox(height: 20),
           Container(
             height: 450,
-            width: 380,
+            width: 360,
             decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(
@@ -345,7 +345,7 @@ class _GameChatState extends State<GameChat> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: MediaQuery.sizeOf(context).width * 0.7,
+                width: MediaQuery.sizeOf(context).width * 0.6,
                 decoration: const BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -381,8 +381,8 @@ class _GameChatState extends State<GameChat> {
               ),
               const SizedBox(width: 5),
               Container(
-                height: 50,
-                width: 50,
+                height: 40,
+                width: 40,
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Color(0xFF6D318D),
@@ -402,9 +402,9 @@ class _GameChatState extends State<GameChat> {
               const SizedBox(width: 5),
               Container(
                 height: 50,
-                width: 70,
+                width: 65,
                 decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
+                  shape: BoxShape.rectangle,
                   color: Color(0xFF6D318D),
                 ),
                 child: TextButton(
@@ -416,7 +416,7 @@ class _GameChatState extends State<GameChat> {
                   },
                   child: const Text(
                     'Guess',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
               ),
@@ -450,7 +450,7 @@ class _CharacterStateDeck extends State<CharacterDeck>
         Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("bgwithQ.png"),
+              image: AssetImage("assets/bgwithQ.png"),
               fit: BoxFit.cover,
             ),
           ),
@@ -542,7 +542,7 @@ class _CharTileState extends State<CharTile> {
               ),
               borderRadius: BorderRadius.circular(5),
               image: const DecorationImage(
-                  image: AssetImage("images/Anon.png"),
+                  image: AssetImage("assets/images/Anon.png"),
                   fit: BoxFit.cover),
             ),
           ),
@@ -557,7 +557,7 @@ class _CharTileState extends State<CharTile> {
                   borderRadius: BorderRadius.circular(5),
                   image: DecorationImage(
                       image: chars[widget.tileList[widget.index]] ??
-                          const AssetImage("images/Anon.png"),
+                          const AssetImage("assets/images/Anon.png"),
                       fit: BoxFit.cover),
                 ),
               )),
