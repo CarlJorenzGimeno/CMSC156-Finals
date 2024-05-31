@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finals/backend/firestore.dart';
 import 'package:finals/backend/globals.dart';
@@ -331,8 +333,12 @@ class _GameChatState extends State<GameChat> {
 
                   var data =
                       snapshot.data?.data() as Map<String, dynamic>;
+
+                  final sorted = SplayTreeMap<String, dynamic>.from(
+                      data, (keys1, keys2) => keys1.compareTo(keys2));
+
                   return ListView(
-                    children: data.entries.map((e) {
+                    children: sorted.entries.map((e) {
                       return ListTile(
                         title: Text(e.value[0] + ': ' + e.value[1]),
                       );
@@ -490,7 +496,8 @@ class _CharacterStateDeck extends State<CharacterDeck>
                     borderRadius: BorderRadius.circular(5),
                     image: DecorationImage(
                         image: chars[guessing] ??
-                            const AssetImage('assets/images/Anon.png'),
+                            const AssetImage(
+                                'assets/images/Anon.png'),
                         fit: BoxFit.cover),
                   ),
                 ),
