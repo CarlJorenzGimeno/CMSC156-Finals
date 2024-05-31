@@ -3,7 +3,11 @@ import 'package:finals/backend/firestore.dart';
 import 'package:finals/backend/globals.dart';
 import 'package:finals/backend/utils.dart';
 import 'package:finals/select_character.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+var gameRoom = db.collection('rooms').doc(currentRoom);
 
 class Game extends StatefulWidget {
   const Game({super.key});
@@ -41,65 +45,158 @@ class _GameState extends State<Game> {
     Navigator.popUntil(context, (route) => route.isFirst);
   }
 
-  @override
-  void initState() {
-    super.initState();
-    String check = (isHost) ? 'p1_chosen' : 'p2_chosen';
-    String condition = (isHost) ? 'p2_guessed' : 'p1_guessed';
-    db
-        .collection('rooms')
-        .doc(currentRoom)
-        .snapshots()
-        .listen((event) {
-      var data = event.data();
-      if (data == null) {
-        leaveGame();
-      }
+  // void checkWin() async {
+  //   await updateRoom();
+  //   // debugPrint(roomInfo.toString());
+  //   bool isWin = await scoring();
+  //   // debugPrint(roomInfo.toString());
+  //   // debugPrint(isWin.toString());
+  //   bool guessCheck1 = roomInfo['p1_guessCheck'] ?? false;
+  //   bool guessCheck2 = roomInfo['p2_guessCheck'] ?? false;
+  //   if ((guessCheck1 || guessCheck2) && context.mounted) {
+  //     showDialog(
+  //         context: context,
+  //         builder: (context) {
+  //           return AlertDialog(
+  //             content: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 Text("$name guessed"),
+  //                 Image(
+  //                   image: chars[guessing] ??
+  //                       const AssetImage('Anon.png'),
+  //                 ),
+  //                 Text(isWin
+  //                     ? "$name wins. ${roomInfo['p1_win']} - ${roomInfo['p2_win']}"
+  //                     : "Wrong"),
+  //                 Visibility(
+  //                     visible: isWin,
+  //                     child: Row(
+  //                       children: [
+  //                         TextButton(
+  //                             onPressed: () {
+  //                               restartGame();
+  //                             },
+  //                             child: const Text('Continue')),
+  //                         TextButton(
+  //                             onPressed: leaveGame,
+  //                             child: const Text('Leave')),
+  //                       ],
+  //                     ))
+  //               ],
+  //             ),
+  //           );
+  //         });
+  //     await addWin();
+  //     db.collection('rooms').doc(currentRoom).update({
+  //       'p1_guessCheck': false,
+  //       'p2_guessCheck': false,
+  //     });
+  //   }
+  // }
 
-      bool win = data?[check] == data?[condition];
+  void showGuess(int win) {
+    String guess = 'p2_guessed';
 
-      debugPrint(guessCheck.toString());
+    if (win == 1) {
+      guess = 'p1_guessed';
+    }
 
-      if (guessCheck) {
-        guessCheck = false;
-
-        showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("$name guessed"),
-                    Image(
-                      image: chars[guessing] ??
-                          const AssetImage('Anon.png'),
-                    ),
-                    FutureBuilder(
-                        future: Future.wait([updateRoom(), addWin()]),
-                        builder: (context, snapshot) {
-                          return Text(win
-                              ? "$name wins. ${roomInfo['p1_win']} - ${roomInfo['p2_win']}"
-                              : "Wrong");
-                        }),
-                    Row(
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('$name guessed'),
+                Image(
+                    image: chars[roomInfo[guess]] ??
+                        const AssetImage('images/Anon.png')),
+                Text((win == 0) ? "Wrong" : "Correct"),
+                Visibility(
+                    visible: !(win == 0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         TextButton(
                             onPressed: () {
                               restartGame();
                             },
-                            child: const Text('Continue')),
+                            child: const Text('New Game')),
                         TextButton(
-                            onPressed: leaveGame,
-                            child: const Text('Leave')),
+                            onPressed: () {
+                              leaveGame();
+                            },
+                            child: const Text('Leave Room')),
                       ],
-                    )
-                  ],
-                ),
-              );
-            });
+                    ))
+              ],
+            ),
+          );
+        });
+  }
+
+  Future<void> clearCheck() async {
+    await gameRoom
+        .update({'p2_guessCheck': false, 'p1_guessCheck': false});
+    await updateRoom();
+  }
+
+  Future<void> addWin(int win) async {
+    if (win == 0) {
+    } else {
+      var data = roomInfo[(win == 1) ? 'p1_win' : 'p2_win'] + 1;
+      await gameRoom.update({
+        (win == 1) ? 'p1_win' : 'p2_win': data,
+      });
+      await updateRoom();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    gameRoom.snapshots().listen((event) {
+      try {
+        var data = event.data();
+        if (data == null) {
+          leaveGame();
+        }
+        int win = 0;
+        bool check =
+            (data?['p1_guessCheck'] == roomInfo['p1_guessCheck']) ||
+                (data?['p2_guessCheck'] == roomInfo['p2_guessCheck']);
+        roomInfo = data ?? roomInfo;
+        if (roomInfo['p1_guessCheck']) {
+          if (roomInfo['p1_guessed'] == roomInfo['p2_chosen']) {
+            win = 1;
+          }
+        } else if (roomInfo['p2_guessCheck']) {
+          if (roomInfo['p2_guessed'] == roomInfo['p1_chosen']) {
+            win = 2;
+          }
+        }
+
+        debugPrint(alert.toString() + check.toString());
+        if (alert) {
+          alert = false;
+          showGuess(win);
+          addWin(win).whenComplete(() => alert = true);
+        }
+      } catch (e) {
+        debugPrint(e.toString());
       }
+
+      clearCheck().whenComplete(() {
+        debugPrint(roomInfo.toString());
+      });
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -148,8 +245,7 @@ class _GameState extends State<Game> {
             width: 110,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage(
-                      'assets/images/Logo_Final_White.png')),
+                  image: AssetImage('Logo_Final_White.png')),
             ),
           ),
           bottom: const TabBar(
@@ -200,7 +296,7 @@ class _GameChatState extends State<GameChat> {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("assets/images/bgwithQ.png"),
+          image: AssetImage("bgwithQ.png"),
           fit: BoxFit.cover,
         ),
       ),
@@ -394,8 +490,7 @@ class _CharacterStateDeck extends State<CharacterDeck>
                     borderRadius: BorderRadius.circular(5),
                     image: DecorationImage(
                         image: chars[guessing] ??
-                            const AssetImage(
-                                'assets/images/Anon.png'),
+                            const AssetImage('images/Anon.png'),
                         fit: BoxFit.cover),
                   ),
                 ),
@@ -447,7 +542,7 @@ class _CharTileState extends State<CharTile> {
               ),
               borderRadius: BorderRadius.circular(5),
               image: const DecorationImage(
-                  image: AssetImage("assets/images/Anon.png"),
+                  image: AssetImage("images/Anon.png"),
                   fit: BoxFit.cover),
             ),
           ),
@@ -462,7 +557,7 @@ class _CharTileState extends State<CharTile> {
                   borderRadius: BorderRadius.circular(5),
                   image: DecorationImage(
                       image: chars[widget.tileList[widget.index]] ??
-                          AssetImage("assets/images/Anon.png"),
+                          const AssetImage("images/Anon.png"),
                       fit: BoxFit.cover),
                 ),
               )),

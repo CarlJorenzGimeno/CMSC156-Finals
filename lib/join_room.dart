@@ -38,7 +38,7 @@ class Join extends StatelessWidget {
                 ),
               ),
               Container(
-                height: 150,
+                height: 160,
                 width: 320,
                 padding: const EdgeInsets.only(left: 20, right: 20),
                 decoration: BoxDecoration(

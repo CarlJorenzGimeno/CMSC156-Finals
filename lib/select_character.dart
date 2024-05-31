@@ -78,21 +78,22 @@ class _SelectState extends State<Select> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if (widget.guessing) {
                     String player = 'p2_guessed';
+                    String checking = 'p2_guessCheck';
                     if (isHost) {
                       player = 'p1_guessed';
+                      checking = 'p1_guessCheck';
                     }
                     // guess = guessing ?? 20;
-                    // guessCheck = true;
-                    db
+                    await db
                         .collection('rooms')
                         .doc(currentRoom)
-                        .update({player: guessing});
+                        .update({player: guessing, checking: true});
 
                     Navigator.of(context).pop();
-                  } else {
+                  } else if (guessing != null) {
                     //Set which field to change
                     String player = 'p2_chosen';
                     if (isHost) {
@@ -105,6 +106,23 @@ class _SelectState extends State<Select> {
                         .update({player: guessing});
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => const Game()));
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: const Text('No Character Chosen'),
+                            content: const Text(
+                                'Choose a character for the other player to guess.'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('OK'))
+                            ],
+                          );
+                        });
                   }
                 },
                 style: ElevatedButton.styleFrom(

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finals/backend/globals.dart';
 import 'package:finals/backend/utils.dart';
+import 'package:finals/game_room.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -70,7 +71,8 @@ Future<void> joinRoom(String roomCode, BuildContext context) async {
   if (isRoomExists) {
     final docRef = db.collection('rooms').doc(roomCode);
     if (await docRef.get().then((value) {
-      return value.data()?['p2_name'] != null;
+      return value.data()?['p2_name'] != null &&
+          value.data()?['p2_name'] != name;
     })) {
       showDialog(
           context: context,
@@ -87,10 +89,14 @@ Future<void> joinRoom(String roomCode, BuildContext context) async {
       'p2_name': name,
     };
     docRef.update(data);
-    roomInfo = (await docRef.get()).data() ?? roomInfo;
-    debugPrint(roomInfo.toString());
     currentRoom = roomCode;
+    await updateRoom();
+    debugPrint(roomInfo.toString());
     if (context.mounted) {
+      if (roomInfo['p2_guessed'] != null) {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const Game()));
+      }
       Navigator.of(context).push(
           MaterialPageRoute(builder: (context) => const Select()));
     }
@@ -120,25 +126,52 @@ Future<void> exitRoom() async {
   currentRoom = "";
 }
 
-Future<void> addWin() async {
-  String player = 'p2_win';
-  int win = roomInfo['p2_win'];
+// Future<bool> scoring() async {
+//   bool isWin = false;
+//   try {
+//     String check = (isHost) ? 'p2_chosen' : 'p1_chosen';
+//     String condition = (isHost) ? 'p1_guessed' : 'p2_guessed';
+//     debugPrint(roomInfo[check].toString());
+//     debugPrint(roomInfo[condition].toString());
+//     int isCheck = roomInfo[check] ?? 20;
+//     int isCondition = roomInfo[condition] ?? 20;
+//     isWin = (isCheck == isCondition);
+//   } catch (e) {
+//     debugPrint(e.toString());
+//   }
+//   return isWin;
+// }
 
-  if (isHost) {
-    player = 'p1_win';
-    win = roomInfo['p1_win'];
-  }
+// Future<void> addWin() async {
+//   bool isWin = false;
+//   String player = 'p2_win';
+//   int winCount = roomInfo['p2_win'];
+//   try {
+//     isWin = await scoring();
+//     if (isHost) {
+//       player = 'p1_win';
+//       winCount = roomInfo['p1_win'];
+//     }
 
-  win++;
-
-  db.collection('rooms').doc(currentRoom).update({player: win});
-  await updateRoom();
-}
+//     if (isWin) {
+//       winCount++;
+//       await db
+//           .collection('rooms')
+//           .doc(currentRoom)
+//           .update({player: winCount});
+//     }
+//   } catch (e) {
+//     debugPrint(e.toString());
+//   }
+// }
 
 Future<void> updateRoom() async {
-  roomInfo =
-      (await db.collection('rooms').doc(currentRoom).get()).data() ??
-          roomInfo;
+  try {
+    var snappy = await db.collection("rooms").doc(currentRoom).get();
+    roomInfo = snappy.data() ?? roomInfo;
+  } catch (e) {
+    debugPrint(e.toString());
+  }
 }
 
 Future<void> startGame() async {

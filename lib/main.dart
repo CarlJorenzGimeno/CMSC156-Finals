@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp(options: DefaultFirebaseOptions.android);
+  Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform);
   runApp(const RunMyApp());
 }
 
@@ -15,7 +16,7 @@ class RunMyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: MainMenu(),
     );
   }
