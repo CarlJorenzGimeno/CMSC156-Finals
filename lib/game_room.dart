@@ -112,7 +112,7 @@ class _GameState extends State<Game> {
                 Text('$name guessed'),
                 Image(
                     image: chars[roomInfo[guess]] ??
-                        const AssetImage('images/Anon.png')),
+                        const AssetImage('assets/images/Anon.png')),
                 Text((win == 0) ? "Wrong" : "Correct"),
                 Visibility(
                     visible: !(win == 0),
@@ -490,7 +490,7 @@ class _CharacterStateDeck extends State<CharacterDeck>
                     borderRadius: BorderRadius.circular(5),
                     image: DecorationImage(
                         image: chars[guessing] ??
-                            const AssetImage('images/Anon.png'),
+                            const AssetImage('assets/images/Anon.png'),
                         fit: BoxFit.cover),
                   ),
                 ),
